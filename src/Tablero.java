@@ -1,16 +1,21 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Tablero {
 	private ArrayList<Reina> reinas = new ArrayList<Reina>();
-	private HashMap<Integer,LinkedList<Reina>> filas = new HashMap<Integer,LinkedList<Reina>>();
-	private HashMap<Integer,LinkedList<Reina>> columnas = new HashMap<Integer,LinkedList<Reina>>();
-	private HashMap<Integer,LinkedList<Reina>> diag1 = new HashMap<Integer,LinkedList<Reina>>();
-	private HashMap<Integer,LinkedList<Reina>> diag2 = new HashMap<Integer,LinkedList<Reina>>();
+	private ArrayList<ArrayList<LinkedList<Reina>>> array = new ArrayList<ArrayList<LinkedList<Reina>>>(4);
+//	private ArrayList<LinkedList<Reina>> filas = new ArrayList<LinkedList<Reina>>();
+//	private ArrayList<LinkedList<Reina>> columnas = new ArrayList<LinkedList<Reina>>();
+//	private ArrayList<LinkedList<Reina>> diag1 = new ArrayList<LinkedList<Reina>>();
+//	private ArrayList<LinkedList<Reina>> diag2 = new ArrayList<LinkedList<Reina>>();
 	
 	public Tablero(ArrayList<String> datos) {
+		array.add(new ArrayList<LinkedList<Reina>>());
+		array.add(new ArrayList<LinkedList<Reina>>());
+		array.add(new ArrayList<LinkedList<Reina>>());
+		array.add(new ArrayList<LinkedList<Reina>>());
 		int x,y,tam;
 		Reina reina = null;
 		Scanner sc = new Scanner(datos.get(0));
@@ -31,12 +36,41 @@ public class Tablero {
 		this.generarConflictosDiagonales(matriz);
 		this.generarConflictosDiagonalesInvertidas(matriz);
 		
-//		System.out.println("filas  " + this.filas);
-//		System.out.println("col  " + this.columnas);
-//		System.out.println("diag1  " + this.diag1);
-//		System.out.println("diag2  " + this.diag2);
+		System.out.println("filas  " + this.array.get(0));
+		System.out.println("col  " + this.array.get(1));
+		System.out.println("diag1  " + this.array.get(2));
+		System.out.println("diag2  " + this.array.get(3));
 	}
 
+	public ArrayList<String> buscarConflictos()
+	{
+		for (Iterator<ArrayList<LinkedList<Reina>>> iterator = array.iterator(); iterator.hasNext();) {
+			ArrayList<LinkedList<Reina>> arrayList = (ArrayList<LinkedList<Reina>>) iterator.next();
+			for (Iterator<LinkedList<Reina>> iterator1 = arrayList.iterator(); iterator1.hasNext();) {
+				LinkedList<Reina> reinas = iterator1.next();
+				for (int i = 0; i < reinas.size(); i++) {
+					if(i-1 >= 0)
+					{					
+						reinas.get(i).agregarConflicto(reinas.get(i-1));
+					}
+					if(i+1 < reinas.size())
+					{
+						reinas.get(i).agregarConflicto(reinas.get(i+1));
+					}
+				}
+			}
+			
+		}
+		System.out.println();
+		System.out.println();
+		ArrayList<String> salida = new ArrayList<String>();
+		for (Reina reina : this.reinas) {
+			salida.add(reina.getCantConflictos() + " " + reina.getConflictos());
+		}
+		
+		return salida;
+	}
+	
 	private void generarConflictosFilas(Reina[][] matriz) {
 		LinkedList<Reina>lista = null;
 		for (int i = 0; i < matriz.length; i++) {
@@ -46,7 +80,7 @@ public class Tablero {
 					lista.add(matriz[i][j]);
 			}
 			if(!lista.isEmpty())
-				this.filas.put(i, lista);
+				this.array.get(0).add(lista);
 		}
 		
 	}
@@ -60,7 +94,7 @@ public class Tablero {
 					lista.add(matriz[j][i]);
 			}
 			if(!lista.isEmpty())
-				this.columnas.put(i, lista);
+				this.array.get(1).add(lista);
 		}
 	}
 	
@@ -107,7 +141,7 @@ public class Tablero {
     		}
     	}
 
-    	this.diag1.put(diag, lista);
+    	this.array.get(2).add(lista);
     }
     
     private void generarConflictosDiagonalesInvertidas(Reina[][] m)
@@ -153,7 +187,7 @@ public class Tablero {
     		}
     	}
 
-    	this.diag2.put(diag, lista);
+    	this.array.get(3).add(lista);
     }
 }
 

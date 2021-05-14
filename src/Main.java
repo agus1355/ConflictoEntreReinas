@@ -52,5 +52,7 @@ public class Main {
 		Archivo a = new Archivo();
 		
 		Tablero t = new Tablero(a.leer("in\\caso_normal.in"));
+		
+		a.escribir(t.buscarConflictos(),"out\\caso_normal.out");
 	}
 }
