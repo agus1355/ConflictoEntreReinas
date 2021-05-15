@@ -6,10 +6,6 @@ import java.util.Scanner;
 public class Tablero {
 	private ArrayList<Reina> reinas = new ArrayList<Reina>();
 	private ArrayList<ArrayList<LinkedList<Reina>>> array = new ArrayList<ArrayList<LinkedList<Reina>>>(4);
-//	private ArrayList<LinkedList<Reina>> filas = new ArrayList<LinkedList<Reina>>();
-//	private ArrayList<LinkedList<Reina>> columnas = new ArrayList<LinkedList<Reina>>();
-//	private ArrayList<LinkedList<Reina>> diag1 = new ArrayList<LinkedList<Reina>>();
-//	private ArrayList<LinkedList<Reina>> diag2 = new ArrayList<LinkedList<Reina>>();
 	
 	public Tablero(ArrayList<String> datos) {
 		array.add(new ArrayList<LinkedList<Reina>>());
@@ -36,10 +32,10 @@ public class Tablero {
 		this.generarConflictosDiagonales(matriz);
 		this.generarConflictosDiagonalesInvertidas(matriz);
 		
-		System.out.println("filas  " + this.array.get(0));
-		System.out.println("col  " + this.array.get(1));
-		System.out.println("diag1  " + this.array.get(2));
-		System.out.println("diag2  " + this.array.get(3));
+		//System.out.println("filas  " + this.array.get(0));
+		//System.out.println("col  " + this.array.get(1));
+		//System.out.println("diag1  " + this.array.get(2));
+		//System.out.println("diag2  " + this.array.get(3));
 	}
 
 	public ArrayList<String> buscarConflictos()
@@ -64,8 +60,15 @@ public class Tablero {
 		System.out.println();
 		System.out.println();
 		ArrayList<String> salida = new ArrayList<String>();
+		String dato;
 		for (Reina reina : this.reinas) {
-			salida.add(reina.getCantConflictos() + " " + reina.getConflictos());
+			ArrayList<Reina> conflictos = reina.getConflictos();
+			conflictos.sort(new ReinaComparatorId());
+			dato = "";
+			for (Reina conflicto : conflictos) {
+				dato = dato + conflicto.getNumId() + " ";
+			}
+			salida.add(reina.getCantConflictos() + " " + dato);
 		}
 		
 		return salida;
@@ -104,7 +107,6 @@ public class Tablero {
     		j = 0,
     		fila = 1,
     		cantE = 2,
-    		diagonales = m.length*2-3,
     		diagonalActual = 0;
     	
     	while(j < m.length-1)
@@ -150,7 +152,6 @@ public class Tablero {
     		j = m.length-1,
     		fila = 1,
     		cantE = 2,
-    		diagonales = m.length*2-3,
     		diagonalActual = 0;
     	
     	while(j > 0)

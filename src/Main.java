@@ -48,11 +48,13 @@ public class Main {
 //			System.out.print(matriz[i][j].numId + " " );
 //		}
 //		System.out.println();
-		
+		long time = System.nanoTime();
 		Archivo a = new Archivo();
 		
 		Tablero t = new Tablero(a.leer("in\\caso_normal.in"));
 		
 		a.escribir(t.buscarConflictos(),"out\\caso_normal.out");
+		
+		System.out.println((System.nanoTime()-time)*Math.pow(10,-6));
 	}
 }
