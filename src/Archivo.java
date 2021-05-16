@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Archivo {
-	public ArrayList<String> leer(String ruta)
+	public Tablero generarTablero(String ruta)
 	{
 		FileReader fr = null;
 		Scanner sc = null;
-		ArrayList<String> datos = new ArrayList<String>();
+		ArrayList<Reina> reinas = new ArrayList<Reina>();
+		int numRegistro,posX,posY;
+		
 		try {
 			fr = new FileReader(ruta);
 		} catch (FileNotFoundException e) {
@@ -19,18 +21,22 @@ public class Archivo {
 		}
 		
 		sc = new Scanner(fr);
-		
+		sc.nextLine();
+		numRegistro = 1; 
 		while(sc.hasNext())
 		{
-			datos.add(sc.nextLine());
+			posX = sc.nextInt();
+			posY = sc.nextInt();
+			reinas.add(new Reina(numRegistro,posX,posY));
+			numRegistro++;
 		}
 		
 		sc.close();
 		
-		return datos;
+		return new Tablero(reinas);
 	}
 	
-	public void escribir(ArrayList<String> salida,String ruta)
+	public void escribirSalida(ArrayList<Reina> reinas,String ruta)
 	{
 		FileWriter fw = null;
 		PrintWriter pw = null;
@@ -42,8 +48,12 @@ public class Archivo {
 		}
 		pw = new PrintWriter(fw);
 		
-		for (String string : salida) {
-			pw.println(string);
+		for (Reina reina : reinas) {
+			pw.print(reina.getCantConflictos() + " ");
+			for (Reina conflicto : reina.getConflictos()) {
+				pw.print(conflicto.getNumId() + " ");
+			}
+			pw.println();
 		}
 		try {
 			fw.close();
